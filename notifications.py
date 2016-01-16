@@ -26,6 +26,7 @@ user has."""
 
 import os
 import sys
+import urllib.request
 
 
 def get_api_token():
@@ -47,6 +48,21 @@ def get_api_token():
     return api_token
 
 
+def get_notifications(api_token):
+    """Returns the user's GitHub notifications in JSON format.
+
+    :param str api_token: The user's api access token.
+    :returns str: The user's notifications in JSON format.
+    """
+
+    # Get the notification info from GitHub
+    response = urllib.request.urlopen("https://api.github.com/notifications?access_token=" + api_token)
+    notifications = response.read()
+
+    # Return the notifications
+    return notifications
+
+
 def main():
     """Return the number of notifications the user has on GitHub to standard
     output."""
@@ -54,8 +70,9 @@ def main():
     # Get the API access token
     api_token = get_api_token()
 
-    # Print out the API access token
-    print(api_token)
+    # Print out the notifications
+    notifications = get_notifications(api_token)
+    print(notifications)
 
 # Run the main method of the script
 if __name__ == '__main__':
