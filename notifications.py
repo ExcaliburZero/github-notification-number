@@ -24,6 +24,7 @@
 """This is a script which returns the number of GitHub notifications that the
 user has."""
 
+import json
 import os
 import sys
 import urllib.request
@@ -52,7 +53,7 @@ def get_notifications(api_token):
     """Returns the user's GitHub notifications in JSON format.
 
     :param str api_token: The user's api access token.
-    :returns str: The user's notifications in JSON format.
+    :returns bytes: The user's notifications in JSON format.
     """
 
     # Get the notification info from GitHub
@@ -70,9 +71,11 @@ def main():
     # Get the API access token
     api_token = get_api_token()
 
-    # Print out the notifications
-    notifications = get_notifications(api_token)
-    print(notifications)
+    # Get the notifications
+    notifications = json.loads(get_notifications(api_token).decode("utf-8"))
+
+    # Print out the number of notifications to standard output
+    print(len(notifications))
 
 # Run the main method of the script
 if __name__ == '__main__':
