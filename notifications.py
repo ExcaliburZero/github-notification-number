@@ -24,11 +24,38 @@
 """This is a script which returns the number of GitHub notifications that the
 user has."""
 
+import os
+import sys
+
+
+def get_api_token():
+    """Returns the GitHub api token that the user has set at
+    GH_NOTIFICATION_TOKEN
+
+    :returns str: The GitHub api token.
+    """
+
+    # Get the API access token
+    api_token = os.environ.get("GH_NOTIFICATION_TOKEN")
+
+    # Make sure that the token exists
+    if api_token is None:
+        print("No token set at GH_NOTIFICATION_TOKEN")
+        sys.exit(1)
+
+    # Return the token
+    return api_token
+
 
 def main():
     """Return the number of notifications the user has on GitHub to standard
     output."""
-    print("Hello World!")
+
+    # Get the API access token
+    api_token = get_api_token()
+
+    # Print out the API access token
+    print(api_token)
 
 # Run the main method of the script
 if __name__ == '__main__':
