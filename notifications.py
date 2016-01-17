@@ -1,3 +1,4 @@
+#!/bin/python
 ### BEGIN LICENSE
 # The MIT License (MIT)
 #
@@ -24,6 +25,7 @@
 """This is a script which returns the number of GitHub notifications that the
 user has."""
 
+import fileinput
 import json
 import os
 import sys
@@ -32,18 +34,30 @@ import urllib.request
 
 def get_api_token():
     """Returns the GitHub api token that the user has set at
-    GH_NOTIFICATION_TOKEN
+    GH_NOTIFICATION_TOKEN or has passed in from standard input.
+
+    Standard input takes priority over environment variable.
 
     :returns str: The GitHub api token.
     """
 
-    # Get the API access token
-    api_token = os.environ.get("GH_NOTIFICATION_TOKEN")
+    # Attempt to get the token from standard input
+    api_token = ""
+    for line in fileinput.input():
+        api_token += line
 
-    # Make sure that the token exists
-    if api_token is None:
-        print("No token set at GH_NOTIFICATION_TOKEN")
-        sys.exit(1)
+    # If the token in not given in standard input, check the environment
+    # variable
+    if api_token == "":
+
+        # Get the API access token from the environment variable
+        api_token = None
+        api_token = os.environ.get("GH_NOTIFICATION_TOKEN")
+
+        # Check to make sure that the token was found
+        if api_token is None:
+            print("No token set at GH_NOTIFICATION_TOKEN")
+            sys.exit(1)
 
     # Return the token
     return api_token
